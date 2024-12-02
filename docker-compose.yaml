@@ -21,7 +21,7 @@ services:
     ports:
       - "5000:3000" # Puerto externo 5000 para la aplicación Flask
     environment:
-      MONGO_URI: mongodb://mongodb:27017/films # URI de conexión a MongoDB
+      MONGO_URI: MONGO_URI: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DATABASE} # URI de conexión a MongoDB
     depends_on:
       - mongodb # Garantiza que MongoDB se inicie antes del servidor Flask
     restart: always
