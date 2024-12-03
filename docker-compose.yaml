@@ -7,9 +7,10 @@ services:
     ports:
       - "27017:27017" # Mapeo del puerto para la conexión a MongoDB
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_DATABASE: ${MONGO_DATABASE}
+      MONGO_HOST: ${MONGO_HOST}
     volumes:
       - mongo_data:/data/db
       - ./data-mongo.js:/docker-entrypoint-initdb.d/data-mongo.js:ro
@@ -21,6 +22,10 @@ services:
     ports:
       - "5000:3000" # Puerto externo 5000 para la aplicación Flask
     environment:
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_DATABASE: ${MONGO_DATABASE}
+      MONGO_HOST: ${MONGO_HOST}
       MONGO_URI: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DATABASE} # URI de conexión a MongoDB
     depends_on:
       - mongodb # Garantiza que MongoDB se inicie antes del servidor Flask
