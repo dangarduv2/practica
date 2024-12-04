@@ -15,6 +15,8 @@ services:
       - mongo_data:/data/db
       - ./data-mongo.js:/docker-entrypoint-initdb.d/data-mongo.js:ro
     restart: always
+    networks:
+      - db-network
 
   web:
     build: ./flask-app
@@ -30,6 +32,27 @@ services:
     depends_on:
       - mongodb # Garantiza que MongoDB se inicie antes del servidor Flask
     restart: always
+    networks:
+      - web-network
+      - db-network
+
+  proxyhost:
+    build:
+      context: ./reverse-proxy
+    container_name: proxyhost
+    ports:
+      - "80:80"   # Puerto externo HTTP
+      - "443:443" # Puerto externo HTTPS
+    depends_on:
+      - web # Asegura que el contenedor web se inicie antes
+    networks:
+      - web-network
 
 volumes:
   mongo_data:
+
+networks:
+  web-network:
+    name: web-network
+  db-network:
+    name: db-network
